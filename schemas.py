@@ -87,7 +87,7 @@ class AdminResponse(BaseModel):
 # Livros
 class LivrosCreate(BaseModel):
     titulo: str
-    editora_id: int
+    editora_id: Optional[int] = None
     author_id: int
 
 
