@@ -1,6 +1,7 @@
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
+from sqlalchemy.exc import SQLAlchemyError
 
 from database import get_db, engine, Base
 from models import Admin , Autores , Editoras , Emprestimos , Favoritos , Livros , Usuarios
@@ -127,7 +128,7 @@ def adicionar_emprestimo(emprestimos: EmprestimosCreate, db: Session = Depends(g
 
 
 @app.post("/usuarios", response_model = UsuariosResponse)
-def adicionar_usuarios(usuario: FavoritosCreate, db: Session = Depends(get_db)):
+def adicionar_usuarios(usuario: UsuariosCreate, db: Session = Depends(get_db)):
     novo_usuario = Usuarios(**usuario.model_dump())
 
     db.add(novo_usuario)
@@ -314,12 +315,106 @@ def editar_favoritos(favoritos_id: int, data: LivrosUpdade, db: Session = Depend
 
 @app.delete("/autores/{autor_id}",  status_code=204)
 def deletar_autor(autor_id: int , db: Session = Depends(get_db)):
-    autor = db.query(Autores).filter(Autores.id == autor_id ).first()
+        autor = db.query(Autores).filter(Autores.id == autor_id ).first()
 
-    if not autor:
-        raise HTTPException(status_code=404, detail= "não encontrado")
+        if not autor:
+            raise HTTPException(status_code=404, detail= "não encontrado")
+        
+        db.delete(autor)
+        db.commit()
+        
+        return None
+
+
+
+
+@app.delete("/editora/{editora_id}",  status_code=204)
+def deletar_editora(editora_id: int , db: Session = Depends(get_db)):
     
-    db.delete(autor)
-    db.commit()
+        editora = db.query(Editoras).filter(Editoras.id == editora_id ).first()
+
+        if not editora:
+            raise HTTPException(status_code=404, detail= "não encontrado")
+        
+        db.delete(editora)
+        db.commit()
+        
+        return None
+
+
+
+
+@app.delete("/livros/{livro_id}",  status_code=204)
+def deletar_livro(livro_id: int , db: Session = Depends(get_db)):
     
-    return None
+        livro = db.query(Livros).filter(Livros.id == livro_id ).first()
+
+        if not livro:
+            raise HTTPException(status_code=404, detail= "não encontrado")
+        
+        db.delete(livro)
+        db.commit()
+        return None
+
+
+
+
+@app.delete("/favoritos/{favoritos_id}",  status_code=204)
+def deletar_favorito(favoritos_id: int , db: Session = Depends(get_db)):
+    
+        favoritos = db.query(Favoritos).filter(Favoritos.id == favoritos_id ).first()
+
+        if not favoritos:
+            raise HTTPException(status_code=404, detail= "não encontrado")
+        
+        db.delete(favoritos)
+        db.commit()
+        
+        return None
+
+
+
+
+@app.delete("/emprestimos/{emprestimos_id}",  status_code=204)
+def deletar_emprestimo(emprestimos_id: int , db: Session = Depends(get_db)):
+    
+        emprestimos = db.query(Emprestimos).filter(Emprestimos.id == emprestimos_id ).first()
+
+        if not emprestimos:
+            raise HTTPException(status_code=404, detail= "não encontrado")
+        
+        db.delete(emprestimos)
+        db.commit()
+        
+        return None
+
+
+
+
+@app.delete("/admin/{admin_id}",  status_code=204)
+def deletar_admin(admin_id: int , db: Session = Depends(get_db)):
+        admin = db.query(Admin).filter(Admin.id == admin_id ).first()
+
+        if not admin:
+            raise HTTPException(status_code=404, detail= "não encontrado")
+        
+        db.delete(admin)
+        db.commit()
+
+        return None
+
+
+
+
+@app.delete("/usuarios/{usuarios_id}",  status_code=204)
+def deletar_usuario(usuarios_id: int , db: Session = Depends(get_db)):
+    
+        usuarios = db.query(Usuarios).filter(Usuarios.id == usuarios_id ).first()
+
+        if not usuarios:
+            raise HTTPException(status_code=404, detail= "não encontrado")
+        
+        db.delete(usuarios)
+        db.commit()
+        
+        return None

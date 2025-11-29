@@ -76,8 +76,8 @@ class Emprestimos(Base):
     id = Column(Integer, primary_key=True, index=True)
     livro_id = Column(Integer, ForeignKey("livros.id"), nullable=False)
     usuario_id = Column(Integer, ForeignKey("usuarios.id"), nullable=False)
-    data_retirada = Column(Date, index=True, nullable=False)
-    data_devolucao = Column(Date, index=True, nullable=False)
+    data_retirada = Column(String, index=True, nullable=False)
+    data_devolucao = Column(String, index=True, nullable=False)
 
     livros = relationship("Livros", back_populates="emprestimos")
     usuarios = relationship("Usuarios", back_populates="emprestimos")
